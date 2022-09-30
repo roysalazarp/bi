@@ -1,39 +1,63 @@
-import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
-import TabsPage from '../views/TabsPage.vue'
+import { createRouter, createWebHistory } from "@ionic/vue-router";
+import { RouteRecordRaw } from "vue-router";
+import MainNavbar from "@/components/MainNavbar.vue";
 
+// check out https://ionicframework.com/docs/vue/navigation
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
-    redirect: '/tabs/tab1'
+    path: "/",
+    redirect: "/home",
   },
   {
-    path: '/tabs/',
-    component: TabsPage,
+    path: "/",
+    component: MainNavbar,
     children: [
       {
-        path: '',
-        redirect: '/tabs/tab1'
+        path: "",
+        redirect: "/home",
       },
       {
-        path: 'tab1',
-        component: () => import('@/views/Tab1Page.vue')
+        name: "Login",
+        path: "login",
+        component: () => import("@/views/LoginPage.vue"),
+        beforeEnter: () => {
+          const user = true;
+          if (user) return "/home";
+        },
       },
       {
-        path: 'tab2',
-        component: () => import('@/views/Tab2Page.vue')
+        name: "Home",
+        path: "home",
+        component: () => import("@/views/HomePage.vue"),
+        meta: { requiresAuth: true },
       },
       {
-        path: 'tab3',
-        component: () => import('@/views/Tab3Page.vue')
-      }
-    ]
-  }
-]
+        name: "Upload",
+        path: "upload",
+        component: () => import("@/views/UploadPage.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        name: "Library",
+        path: "library",
+        component: () => import("@/views/LibraryPage.vue"),
+        meta: { requiresAuth: true },
+      },
+    ],
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-export default router
+router.beforeEach(async (to) => {
+  const user = true;
+
+  if (to.meta.requiresAuth && !user && to.name !== "Login") {
+    return "/login";
+  }
+});
+
+export default router;

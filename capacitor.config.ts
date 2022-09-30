@@ -1,10 +1,16 @@
-import { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'bi',
-  webDir: 'dist',
-  bundledWebRuntime: false
+  appId: "io.ionic.bi",
+  appName: "bi",
+  webDir: "dist",
+  bundledWebRuntime: false,
+  server: {
+    url: "http://localhost:8100/",
+    // allowNavigation: [
+    //   "*"
+    // ]
+  },
 };
 
 export default config;
